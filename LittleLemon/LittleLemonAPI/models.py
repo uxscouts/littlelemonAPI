@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -12,3 +13,23 @@ class MenuItem(models.Model):
   price = models.DecimalField(max_digits=6, decimal_places=2, db_index=True)
   featured = models.BooleanField(db_index=True)
   category = models.ForeignKey(Category, on_delete=models.PROTECT)
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    menuitem = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        unique_together = ('menuitem', 'user')
+
+class Order(models.Model):
+    # Distinct related_names prevent clashing reverse lookups
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    delivery_crew = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="delivery_orders", null=True)
+    
+    # Use proper Boolean values
+    status = models.BooleanField(db_index=True, default=False)
+    
+    total = models.DecimalField(max_digits=6, decimal_places=2)
+    date = models.DateField(db_index=True)
