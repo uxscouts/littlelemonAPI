@@ -1,35 +1,50 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-# Create your models here.
 class Category(models.Model):
-  slug = models.SlugField()
-  title = models.CharField(max_length=255, db_index=True)
+    # Added db_index=True to slug since it's frequently searched in URLs
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    title = models.CharField(max_length=255, db_index=True)
 
 
 class MenuItem(models.Model):
-  title = models.CharField(max_length=255, db_index=True)
-  price = models.DecimalField(max_digits=6, decimal_places=2, db_index=True)
-  featured = models.BooleanField(db_index=True)
-  category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    title = models.CharField(max_length=255, db_index=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, db_index=True)
+    featured = models.BooleanField(db_index=True, default=False) # Added a default
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     menuitem = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2) # Added for parity with OrderItem
 
     class Meta:
-        unique_together = ('menuitem', 'user')
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'menuitem'], name='unique_user_cart_item')
+        ]
+
 
 class Order(models.Model):
-    # Distinct related_names prevent clashing reverse lookups
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     delivery_crew = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="delivery_orders", null=True)
-    
-    # Use proper Boolean values
     status = models.BooleanField(db_index=True, default=False)
-    
     total = models.DecimalField(max_digits=6, decimal_places=2)
-    date = models.DateField(db_index=True)
+    # Changed to auto_now_add so it automatically sets the current date when created
+    date = models.DateField(db_index=True, auto_now_add=True) 
+
+
+class OrderItem(models.Model):
+    # FIXED: Now points to Order, not User
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items") 
+    menuitem = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.SmallIntegerField()
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['order', 'menuitem'], name='unique_order_item')
+        ]
