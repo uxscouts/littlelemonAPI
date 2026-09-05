@@ -17,10 +17,17 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView 
+from LittleLemonAPI.views import ApiDirectoryView 
+from LittleLemonAPI.views import ApiDirectoryView, CategoryView, MenuItemView 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    
-    # This prefixes all routes in LittleLemonAPI with "api/"
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('api/', ApiDirectoryView.as_view(), name='api-directory'),
+    path('api/categories/', CategoryView.as_view(), name='categories'),
+    path('api/menu-items/', MenuItemView.as_view(), name='menu-items'),   
     path("api/", include("LittleLemonAPI.urls")),
 ]
+
+

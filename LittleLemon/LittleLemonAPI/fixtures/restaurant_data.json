@@ -1,0 +1,164 @@
+[
+    {
+        "model": "LittleLemonAPI.category",
+        "pk": 1,
+        "fields": {
+            "slug": "appetizers",
+            "title": "Appetizers"
+        }
+    },
+    {
+        "model": "LittleLemonAPI.category",
+        "pk": 2,
+        "fields": {
+            "slug": "mains",
+            "title": "Main Dishes"
+        }
+    },
+    {
+        "model": "LittleLemonAPI.category",
+        "pk": 3,
+        "fields": {
+            "slug": "desserts",
+            "title": "Desserts"
+        }
+    },
+    {
+        "model": "LittleLemonAPI.category",
+        "pk": 4,
+        "fields": {
+            "slug": "drinks",
+            "title": "Drinks"
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 1,
+        "fields": {
+            "title": "Garlic Bread",
+            "price": "5.50",
+            "featured": false,
+            "category": 1
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 2,
+        "fields": {
+            "title": "Bruschetta",
+            "price": "7.25",
+            "featured": true,
+            "category": 1
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 3,
+        "fields": {
+            "title": "Chicken Wings",
+            "price": "10.99",
+            "featured": false,
+            "category": 1
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 4,
+        "fields": {
+            "title": "Margherita Pizza",
+            "price": "14.50",
+            "featured": true,
+            "category": 2
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 5,
+        "fields": {
+            "title": "BBQ Bacon Burger",
+            "price": "15.99",
+            "featured": true,
+            "category": 2
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 6,
+        "fields": {
+            "title": "Fettuccine Alfredo",
+            "price": "16.50",
+            "featured": false,
+            "category": 2
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 7,
+        "fields": {
+            "title": "Grilled Salmon",
+            "price": "22.00",
+            "featured": false,
+            "category": 2
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 8,
+        "fields": {
+            "title": "Chocolate Lava Cake",
+            "price": "8.50",
+            "featured": true,
+            "category": 3
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 9,
+        "fields": {
+            "title": "New York Cheesecake",
+            "price": "7.99",
+            "featured": false,
+            "category": 3
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "pk": 10,
+        "fields": {
+            "title": "Apple Pie",
+            "price": "6.50",
+            "featured": false,
+            "category": 3
+        }
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "fields": {
+            "title": "Fresh Lemonade",
+            "price": "3.50",
+            "featured": false,
+            "category": 4
+        },
+        "pk": 11
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "fields": {
+            "title": "Iced Latte",
+            "price": "4.50",
+            "featured": true,
+            "category": 4
+        },
+        "pk": 12
+    },
+    {
+        "model": "LittleLemonAPI.menuitem",
+        "fields": {
+            "title": "Craft Beer",
+            "price": "6.00",
+            "featured": false,
+            "category": 4
+        },
+        "pk": 13
+    }
+]

@@ -1,5 +1,9 @@
 from django.http import JsonResponse
 from .models import Category, MenuItem 
+from django.views.generic import TemplateView
+from rest_framework import generics
+from .models import Category, MenuItem
+from .serializers import CategorySerializer, MenuItemSerializer
 
 
 def category_list(request):
@@ -39,3 +43,51 @@ def menu_item_list(request):
     
     data = list(items)
     return JsonResponse(data, safe=False)
+
+
+
+class ApiDirectoryView(TemplateView):
+    template_name = 'api_directory.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Define your endpoints dynamically to loop through them in HTML
+        context['endpoints'] = [
+            {
+                'name': 'Categories',
+                'url': '/api/categories/',
+                'method': 'GET, POST',
+                'description': 'List all food categories or create a new one.'
+            },
+            {
+                'name': 'Menu Items',
+                'url': '/api/menu-items/',
+                'method': 'GET, POST',
+                'description': 'Browse the restaurant menu or add new food items.'
+            },
+            {
+                'name': 'Shopping Cart',
+                'url': '/api/cart/',
+                'method': 'GET, POST, DELETE',
+                'description': 'Manage temporary items inside the current user\'s cart.'
+            },
+            {
+                'name': 'Orders',
+                'url': '/api/orders/',
+                'method': 'GET, POST',
+                'description': 'View order history or checkout active cart items.'
+            },
+        ]
+        return context
+
+
+    # View for /api/categories/
+class CategoryView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+# View for /api/menu-items/
+class MenuItemView(generics.ListCreateAPIView):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
