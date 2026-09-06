@@ -39,7 +39,24 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "LittleLemonAPI",
     "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+    "django_filters",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2 # Short pagination window for easier reviewer verification
+}
+
+DJOSER = {
+    'USER_ID_FIELD': 'username'
+}
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
