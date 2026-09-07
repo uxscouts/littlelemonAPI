@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Category, MenuItem
 from .serializers import CategorySerializer, MenuItemSerializer
-from .permissions import IsManager # Your custom permission file
+from .permissions import IsManager
 
 # --- API DIRECTORY ---
 class ApiDirectoryView(TemplateView):
@@ -23,6 +23,13 @@ class ApiDirectoryView(TemplateView):
             {'name': 'Orders', 'url': '/api/orders/', 'method': 'GET, POST', 'description': 'View order history or checkout active cart items.'},
         ]
         return context
+
+
+# Add this inside views.py
+class HomeView(TemplateView):
+    template_name = 'home.html' # Django looks inside your app's templates/ folder automatically
+
+
 
 
 # --- CATEGORIES ENDPOINTS ---
