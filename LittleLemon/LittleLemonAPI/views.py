@@ -237,15 +237,59 @@ class OrderView(APIView):
 class SingleOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    # --- 1. GET A SPECIFIC ORDER ---
+    def get(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Enforce Customer Boundaries
+        is_manager = request.user.groups.filter(name='Manager').exists() or request.user.is_superuser
+        is_crew = request.user.groups.filter(name='Delivery Crew').exists()
+        
+        if not is_manager and not is_crew and order.customer != request.user:
+            return Response({"error": "You do not have permission to view this order."}, status=status.HTTP_403_FORBIDDEN)
+            
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # --- 2. UPDATE A SPECIFIC ORDER (PATCH) ---
     def patch(self, request, pk):
         try:
             order = Order.objects.get(pk=pk)
         except Order.DoesNotExist:
             return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Re-use your robust OrderSerializer to automatically process role context restrictions
+        is_manager = request.user.groups.filter(name='Manager').exists() or request.user.is_superuser
+        is_crew = request.user.groups.filter(name='Delivery Crew').exists()
+
+        # Regular Customers are NOT allowed to patch orders after they are placed!
+        if not is_manager and not is_crew:
+            return Response({"error": "Customers cannot modify orders after submission."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Delivery Crew can ONLY update the status field!
+        if is_crew and not is_manager:
+            # If they try to modify anything other than 'status', block it
+            if any(key != 'status' for key in request.data.keys()):
+                return Response({"error": "Delivery crew can only update order status."}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = OrderSerializer(order, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # --- 3. DELETE AN ORDER ---
+    def delete(self, request, pk):
+        # Only Managers can permanently delete records
+        if not request.user.groups.filter(name='Manager').exists() and not request.user.is_superuser:
+            return Response({"error": "Only managers can delete orders."}, status=status.HTTP_403_FORBIDDEN)
+            
+        try:
+            order = Order.objects.get(pk=pk)
+            order.delete()
+            return Response({"message": "Order deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
