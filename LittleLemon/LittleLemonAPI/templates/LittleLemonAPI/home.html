@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Lemon Restaurant API</title>
+    
+    <!-- Link your clean external stylesheet here -->
+    <link rel="stylesheet" href="{% static 'LittleLemonAPI/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <span class="badge">Status: Online & Ready</span>
+        <h1>Little Lemon API</h1>
+        <p>Your backend database models and endpoints are successfully configured.</p>
+        <div class="links">
+            <a href="/admin/" class="btn">Go to Django Admin</a>
+            <a href="{% url 'api-directory' %}" class="btn btn-secondary">Browse API Endpoints</a>
+        </div>
+    </div>
+</body>
+</html>

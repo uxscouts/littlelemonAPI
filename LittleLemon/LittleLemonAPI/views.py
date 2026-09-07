@@ -10,25 +10,23 @@ from .models import Category, MenuItem
 from .serializers import CategorySerializer, MenuItemSerializer
 from .permissions import IsManager
 
-# --- API DIRECTORY ---
+class HomeView(TemplateView):
+    template_name = 'LittleLemonAPI/home.html' # Updated path
+
+# In LittleLemonAPI/views.py
 class ApiDirectoryView(TemplateView):
-    template_name = 'api_directory.html'
+    # Update this line to use the namespaced path!
+    template_name = 'LittleLemonAPI/api_directory.html' 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['endpoints'] = [
             {'name': 'Categories', 'url': '/api/categories/', 'method': 'GET, POST', 'description': 'List all food categories or create a new one.'},
             {'name': 'Menu Items', 'url': '/api/menu-items/', 'method': 'GET, POST', 'description': 'Browse the restaurant menu or add new food items.'},
-            {'name': 'Shopping Cart', 'url': '/api/cart/', 'method': 'GET, POST, DELETE', 'description': 'Manage temporary items inside the current user\'s cart.'},
+            {'name': 'Shopping Cart', 'url': '/api/cart/menu-items/', 'method': 'GET, POST, DELETE', 'description': 'Manage temporary items inside the current user\'s cart.'},
             {'name': 'Orders', 'url': '/api/orders/', 'method': 'GET, POST', 'description': 'View order history or checkout active cart items.'},
         ]
         return context
-
-
-# Add this inside views.py
-class HomeView(TemplateView):
-    template_name = 'home.html' # Django looks inside your app's templates/ folder automatically
-
 
 
 
